@@ -1,0 +1,74 @@
+version: '3.8'
+
+services:
+  api:
+    build: .
+    container_name: cinema-api
+    ports:
+      - '3000:3000'
+    environment:
+      - PORT=3000
+      - NODE_ENV=production
+      - DB_TYPE=postgres
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_NAME=cinema_db
+      - JWT_SECRET=${JWT_SECRET:-change_this_super_secret_key_in_production}
+      - JWT_EXPIRES_IN=1d
+      - FRONTEND_URL=${FRONTEND_URL:-http://localhost:5173}
+      - OPENWEATHER_API_KEY=${OPENWEATHER_API_KEY:-}
+      - OPENWEATHER_DEFAULT_CITY=Dakar
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      - postgres
+      - redis
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: cinema-postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=cinema_db
+    ports:
+      - '5432:5432'
+    volumes:
+      - cinema_pg_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    container_name: cinema-redis
+    restart: unless-stopped
+    ports:
+      - '6379:6379'
+
+  # ==== Monitoring (bonus) ====
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: cinema-prometheus
+    restart: unless-stopped
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    ports:
+      - '9090:9090'
+    depends_on:
+      - api
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: cinema-grafana
+    restart: unless-stopped
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    ports:
+      - '3001:3000'
+    depends_on:
+      - prometheus
+
+volumes:
+  cinema_pg_data:
