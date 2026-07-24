@@ -1,6 +1,6 @@
 # sqlite3 et bcrypt sont des paquets natifs (compilés en C++) : sans python3/make/g++,
 # `npm install` échoue silencieusement sur Alpine (même problème que sous Windows
-# sans les Build Tools). On les installe puis on les retire de l'image finale.
+# sans les Build Tools). 
 FROM node:20-alpine AS builder
 RUN apk add --no-cache python3 make g++
 WORKDIR /app
