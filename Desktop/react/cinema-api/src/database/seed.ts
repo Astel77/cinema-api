@@ -78,7 +78,7 @@ async function seed() {
   }
   console.log(`✅ ${cinemas.length} cinémas prêts`);
 
-  // ==== Films ====
+  // == Films ==
   const moviesData = [
     {
       title: 'Avengers Endgame',
