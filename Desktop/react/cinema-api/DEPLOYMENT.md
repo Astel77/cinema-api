@@ -20,7 +20,7 @@ la méthode la plus simple et gratuite, étape par étape.
 7. Clique sur **"Create Web Service"**.
 8. Attends la fin du build (quelques minutes) → Render te donne une URL du style
    `https://cinema-api-xxxx.onrender.com`.
-9. Une fois en ligne, lance le seed **à distance** via le Shell intégré de Render
+9. Une fois en ligne, lance le seed **à distance** 
    (onglet "Shell" dans le dashboard du service) :
    ```bash
    npm run seed
